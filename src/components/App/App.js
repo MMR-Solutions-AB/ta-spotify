@@ -1,6 +1,7 @@
 import './App.css';
 import SideNav from '../SideNav/SideNav';
 import Playlist from '../Playlist/Playlist';
+import MobileNav from '../MobileNav/MobileNav';
 import { Box } from '@mui/material';
 
 function App() {
@@ -10,6 +11,79 @@ function App() {
     { name: 'Hip hop', playlistId: 834, image: '/Justin-Bieber.png' },
     { name: 'X-mas', playlistId: 5503, image: '/Justin-Bieber.png' },
     { name: 'Code life', playlistId: 4832, image: '/Justin-Bieber.png' },
+  ];
+
+  const songs = [
+    {
+      image: '/Justin-Bieber.png',
+      title: 'Holy',
+      artist: 'Justin Bieber',
+      album: 'No clue',
+      duration: 180,
+    },
+    {
+      image: '/Justin-Bieber.png',
+      title: 'Holy',
+      artist: 'Justin Bieber',
+      album: 'No clue',
+      duration: 180,
+    },
+    {
+      image: '/Justin-Bieber.png',
+      title: 'Holy',
+      artist: 'Justin Bieber',
+      album: 'No clue',
+      duration: 180,
+    },
+    {
+      image: '/Justin-Bieber.png',
+      title: 'Holy',
+      artist: 'Justin Bieber',
+      album: 'No clue',
+      duration: 180,
+    },
+    {
+      image: '/Justin-Bieber.png',
+      title: 'Holy',
+      artist: 'Justin Bieber',
+      album: 'No clue',
+      duration: 180,
+    },
+    {
+      image: '/Justin-Bieber.png',
+      title: 'Holy',
+      artist: 'Justin Bieber',
+      album: 'No clue',
+      duration: 180,
+    },
+    {
+      image: '/Justin-Bieber.png',
+      title: 'Holy',
+      artist: 'Justin Bieber',
+      album: 'No clue',
+      duration: 180,
+    },
+    {
+      image: '/Justin-Bieber.png',
+      title: 'Holy',
+      artist: 'Justin Bieber',
+      album: 'No clue',
+      duration: 180,
+    },
+    {
+      image: '/Justin-Bieber.png',
+      title: 'Holy',
+      artist: 'Justin Bieber',
+      album: 'No clue',
+      duration: 180,
+    },
+    {
+      image: '/Justin-Bieber.png',
+      title: 'Holy',
+      artist: 'Justin Bieber',
+      album: 'No clue',
+      duration: 180,
+    },
   ];
   return (
     <div className='App'>
@@ -29,8 +103,9 @@ function App() {
           }}
         >
           <SideNav playlists={mockData} />
-          <Playlist />
+          <Playlist songs={songs} />
         </Box>
+        <MobileNav />
         <Box
           px={3}
           sx={{
