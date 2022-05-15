@@ -1,7 +1,8 @@
 import React from 'react';
 import { Avatar, Box, Typography } from '@mui/material';
+import SongTable from '../SongTable/SongTable';
 
-export default function Playlist() {
+export default function Playlist({ songs }) {
   return (
     <Box
       sx={{
@@ -43,6 +44,7 @@ export default function Playlist() {
           </Typography>
         </Box>
       </Box>
+      <SongTable songs={songs} />
     </Box>
   );
 }
