@@ -1,8 +1,14 @@
 import { Box } from '@mui/material';
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+
 export default function NavItem({ name, Icon, active, target }) {
+  const navigate = useNavigate();
   return (
     <Box
+      onClick={() => {
+        navigate(target);
+      }}
       px={3}
       py={1}
       sx={{
