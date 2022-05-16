@@ -5,6 +5,8 @@ import MobileNav from '../MobileNav/MobileNav';
 import { Box } from '@mui/material';
 import Player from '../Player/Player';
 import { Routes, Route } from 'react-router-dom';
+import Library from '../Library/Library';
+import Home from '../Home/Home';
 
 function App() {
   const mockData = [
@@ -106,18 +108,12 @@ function App() {
         >
           <SideNav playlists={mockData} />
           <Routes>
-            <Route
-              path='/'
-              element={<h1 style={{ color: 'white' }}>Home</h1>}
-            />
+            <Route path='/' element={<Home />} />
             <Route
               path='/search'
               element={<h1 style={{ color: 'white' }}>Search</h1>}
             />
-            <Route
-              path='/library'
-              element={<h1 style={{ color: 'white' }}>Library</h1>}
-            />
+            <Route path='/library' element={<Library playlists={mockData} />} />
             <Route
               path='/playlist/:playlistId'
               element={<Playlist songs={songs} />}
