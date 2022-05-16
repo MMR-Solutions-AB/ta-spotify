@@ -3,6 +3,8 @@ import SideNav from '../SideNav/SideNav';
 import Playlist from '../Playlist/Playlist';
 import MobileNav from '../MobileNav/MobileNav';
 import { Box } from '@mui/material';
+import Player from '../Player/Player';
+import { Routes, Route } from 'react-router-dom';
 
 function App() {
   const mockData = [
@@ -103,8 +105,26 @@ function App() {
           }}
         >
           <SideNav playlists={mockData} />
-          <Playlist songs={songs} />
+          <Routes>
+            <Route
+              path='/'
+              element={<h1 style={{ color: 'white' }}>Home</h1>}
+            />
+            <Route
+              path='/search'
+              element={<h1 style={{ color: 'white' }}>Search</h1>}
+            />
+            <Route
+              path='/library'
+              element={<h1 style={{ color: 'white' }}>Library</h1>}
+            />
+            <Route
+              path='/playlist/:playlistId'
+              element={<Playlist songs={songs} />}
+            />
+          </Routes>
         </Box>
+        <Player />
         <MobileNav />
         <Box
           px={3}
