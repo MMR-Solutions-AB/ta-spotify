@@ -8,6 +8,7 @@ export default function SongTable({ songs }) {
     return songs.map((song, i) => {
       return (
         <Grid
+          key={i}
           px={2}
           py={1}
           container
