@@ -4,3 +4,8 @@ export const formatTime = (value) => {
   const seconds = rest < 10 ? `0${rest}` : rest;
   return `${min}:${seconds}`;
 };
+
+export const getAccessToken = () => {
+  const params = new URLSearchParams(window.location.hash.replace('#', '?'));
+  return params.get('access_token');
+};
