@@ -3,7 +3,7 @@ import { VolumeDown, VolumeUp, VolumeOff } from "@mui/icons-material";
 import { Grid, Stack, Slider } from "@mui/material";
 
 const VolumeControlls = ({ sliderStyle }) => {
-  const defaultVolume = 40;
+  const defaultVolume = 40; // deafault value
   const [volume, setVolume] = useState(defaultVolume);
 
   return (
