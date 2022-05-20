@@ -10,95 +10,55 @@ import Home from '../Home/Home';
 import Login from '../Login/Login';
 import { useEffect } from 'react';
 import { connect } from 'react-redux';
-import SpotifyWebApi from 'spotify-web-api-node';
-import { fetchUser, fetchPlaylist } from '../../store/actions/index';
+import { fetchUser, fetchPlaylist, addDevice } from '../../store/actions/index';
 
-function App({ token, fetchUser, fetchPlaylist }) {
-  const songs = [
-    {
-      image: '/Justin-Bieber.png',
-      title: 'Holy',
-      artist: 'Justin Bieber',
-      album: 'No clue',
-      duration: 180,
+const setupSpotifyConnect = (token, addDevice, spotifyApi) => {
+  const player = new window.Spotify.Player({
+    name: 'Web Playback SDK Quick Start Player',
+    getOAuthToken: (cb) => {
+      cb(token);
     },
-    {
-      image: '/Justin-Bieber.png',
-      title: 'Holy',
-      artist: 'Justin Bieber',
-      album: 'No clue',
-      duration: 180,
-    },
-    {
-      image: '/Justin-Bieber.png',
-      title: 'Holy',
-      artist: 'Justin Bieber',
-      album: 'No clue',
-      duration: 180,
-    },
-    {
-      image: '/Justin-Bieber.png',
-      title: 'Holy',
-      artist: 'Justin Bieber',
-      album: 'No clue',
-      duration: 180,
-    },
-    {
-      image: '/Justin-Bieber.png',
-      title: 'Holy',
-      artist: 'Justin Bieber',
-      album: 'No clue',
-      duration: 180,
-    },
-    {
-      image: '/Justin-Bieber.png',
-      title: 'Holy',
-      artist: 'Justin Bieber',
-      album: 'No clue',
-      duration: 180,
-    },
-    {
-      image: '/Justin-Bieber.png',
-      title: 'Holy',
-      artist: 'Justin Bieber',
-      album: 'No clue',
-      duration: 180,
-    },
-    {
-      image: '/Justin-Bieber.png',
-      title: 'Holy',
-      artist: 'Justin Bieber',
-      album: 'No clue',
-      duration: 180,
-    },
-    {
-      image: '/Justin-Bieber.png',
-      title: 'Holy',
-      artist: 'Justin Bieber',
-      album: 'No clue',
-      duration: 180,
-    },
-    {
-      image: '/Justin-Bieber.png',
-      title: 'Holy',
-      artist: 'Justin Bieber',
-      album: 'No clue',
-      duration: 180,
-    },
-  ];
+    volume: 0.5,
+  });
 
-  const spotifyApi = new SpotifyWebApi();
+  // Ready
+  player.addListener('ready', ({ device_id }) => {
+    addDevice(device_id);
+    spotifyApi.transferMyPlayback([device_id]);
+  });
 
+  // Not Ready
+  player.addListener('not_ready', ({ device_id }) => {
+    console.log('Device ID has gone offline', device_id);
+  });
+
+  player.addListener('initialization_error', ({ message }) => {
+    console.error(message);
+  });
+
+  player.addListener('authentication_error', ({ message }) => {
+    console.error(message);
+  });
+
+  player.addListener('account_error', ({ message }) => {
+    console.error(message);
+  });
+
+  player.connect();
+};
+
+function App({ token, fetchUser, fetchPlaylist, spotifyApi, addDevice }) {
   useEffect(() => {
-    // Set up spotify:
-    spotifyApi.setAccessToken(token);
-
     const getData = async () => {
       fetchUser(spotifyApi);
       fetchPlaylist(spotifyApi);
     };
-
-    if (token) getData();
+    if (token) {
+      window.onSpotifyWebPlaybackSDKReady = () => {
+        setupSpotifyConnect(token, addDevice, spotifyApi);
+      };
+      getData();
+    }
   }, [token, fetchUser]);
 
   return (
@@ -129,7 +89,7 @@ function App({ token, fetchUser, fetchPlaylist }) {
               <Route path='/library' element={<Library />} />
               <Route
                 path='/playlist/:playlistId'
-                element={<Playlist songs={songs} spotifyApi={spotifyApi} />}
+                element={<Playlist spotifyApi={spotifyApi} />}
               />
             </Routes>
           </Box>
@@ -164,6 +124,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     fetchUser: (data) => dispatch(fetchUser(data)),
     fetchPlaylist: (data) => dispatch(fetchPlaylist(data)),
+    addDevice: (device_id) => dispatch(addDevice(device_id)),
   };
 };
 

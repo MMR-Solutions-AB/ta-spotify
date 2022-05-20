@@ -19,9 +19,8 @@ export const fetchPlaylist = (spotifyApi) => {
   return async (dispatch) => {
     dispatch(fetchPlaylistStart());
     try {
-      const playlists = await spotifyApi.getUserPlaylists({
-        limit: 50 /* max allowed 50 playlists per request, can offset to get new ones in next request */,
-      });
+      const playlists = await spotifyApi.getUserPlaylists();
+      // Not sure if we need the body!
       dispatch(fetchPlaylistSuccess(playlists.body.items));
     } catch (error) {
       dispatch(fetchPlaylistFail(error));
