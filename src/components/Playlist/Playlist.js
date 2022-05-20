@@ -9,11 +9,10 @@ const Playlist = ({ songs }) => {
         p={{ xs: 3, md: 4 }}
         sx={{
           width: "100%",
-          background:
-            "linear-gradient(0deg, rgba(17,38,25,1) 0%, rgba(24,115,38,1) 100%);",
+          background: "linear-gradient(0deg, #121212 0%, #F0790070 100%);",
           display: "flex",
           justifyContent: "flex-start",
-          aignItems: { xs: "flex-start", md: "flex-end", xl: "center" },
+          alignItems: { xs: "flex-start", md: "flex-end", xl: "center" },
           gap: 3,
           boxSizing: "border-box",
           flexDirection: { xs: "column", md: "row" },
