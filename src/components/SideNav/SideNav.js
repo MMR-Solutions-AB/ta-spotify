@@ -1,19 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Box, Divider } from '@mui/material';
 import NavItem from '../NavItem/NavItem';
 import NavPlaylist from '../NavPlaylist/NavPlaylist';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
+import { connect } from 'react-redux';
 
-export default function SideNav({ playlists }) {
+function SideNav({ playlists, loading }) {
   const renderPlaylists = () => {
-    return playlists.map((playlist) => {
+    if (loading) return 'Loading';
+    return playlists?.map((playlist) => {
       return (
-        <NavPlaylist
-          key={playlist.playlistId}
-          id={playlist.playlistId}
-          name={playlist.name}
-        />
+        <NavPlaylist key={playlist.id} id={playlist.id} name={playlist.name} />
       );
     });
   };
@@ -41,16 +39,16 @@ export default function SideNav({ playlists }) {
         <Divider sx={{ backgroundColor: '#ffffff40' }} />
       </Box>
 
-      <Box sx={{ overflowY: 'auto', flex: 1 }}>
-        {renderPlaylists()}
-        {renderPlaylists()}
-        {renderPlaylists()}
-        {renderPlaylists()}
-        {renderPlaylists()}
-        {renderPlaylists()}
-        {renderPlaylists()}
-        {renderPlaylists()}
-      </Box>
+      <Box sx={{ overflowY: 'auto', flex: 1 }}>{renderPlaylists()}</Box>
     </Box>
   );
 }
+
+const mapStateToProps = (state) => {
+  return {
+    playlists: state.playlist.items,
+    loading: state.playlist.loading,
+  };
+};
+
+export default connect(mapStateToProps)(SideNav);

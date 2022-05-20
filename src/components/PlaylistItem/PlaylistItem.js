@@ -7,7 +7,7 @@ import ListItemText from '@mui/material/ListItemText';
 import { useNavigate } from 'react-router-dom';
 import { Skeleton } from '@mui/material';
 
-function PlaylistItem({ name, playlistId, image, loading }) {
+function PlaylistItem({ name, id, images, loading }) {
   const navigate = useNavigate();
 
   if (loading)
@@ -25,7 +25,7 @@ function PlaylistItem({ name, playlistId, image, loading }) {
   return (
     <Box
       onClick={() => {
-        navigate(`/playlist/${playlistId}`);
+        navigate(`/playlist/${id}`);
       }}
       sx={{
         display: 'flex',
@@ -36,7 +36,10 @@ function PlaylistItem({ name, playlistId, image, loading }) {
     >
       <Avatar
         alt='Remy Sharp'
-        src={image}
+        src={
+          images?.[0]
+            ?.url /* Optional chaining: https://youtu.be/O0gmXbN7lVE?t=75 */
+        }
         variant='square'
         sx={{ height: 60, width: 60, marginRight: '15px' }}
       />

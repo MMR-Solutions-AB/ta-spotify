@@ -6,6 +6,8 @@ export const liveUri = 'https://techover-spotify.herokuapp.com/';
 export const devUri = 'http://localhost:3000/';
 export const redirectUrl = devUri; //change to liveUri when published to ex. heroku
 export const scopes = [
+  'playlist-read-private',
+  'playlist-read-collaborative',
   'user-read-currently-playing',
   'user-read-recently-played',
   'user-read-playback-state',

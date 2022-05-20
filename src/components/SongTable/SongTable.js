@@ -6,6 +6,11 @@ import { formatTime } from '../../utils/functions';
 export default function SongTable({ songs }) {
   const renderSongs = () => {
     return songs.map((song, i) => {
+      const album = song.album.name;
+      const image = song.album.images[2].url;
+      const title = song.name;
+      const artist = song.artists[0].name;
+      const duration = song.duration_ms / 1000;
       return (
         <Grid
           key={i}
@@ -41,12 +46,12 @@ export default function SongTable({ songs }) {
               gap: 2,
             }}
           >
-            <Avatar src='/Justin-Bieber.png' alt='logo' variant='square' />
+            <Avatar src={image} alt='logo' variant='square' />
             <Box>
               <Typography sx={{ fontSize: 16, color: 'white' }}>
-                {song.title}
+                {title}
               </Typography>
-              <Typography sx={{ fontSize: 14 }}>{song.artist}</Typography>
+              <Typography sx={{ fontSize: 14 }}>{artist}</Typography>
             </Box>
           </Grid>
           <Grid
@@ -57,7 +62,7 @@ export default function SongTable({ songs }) {
               alignItems: 'center',
             }}
           >
-            {song.album}
+            {album}
           </Grid>
           <Grid
             item
@@ -68,7 +73,7 @@ export default function SongTable({ songs }) {
               alignItems: 'center',
             }}
           >
-            {formatTime(song.duration)}
+            {formatTime(duration)}
           </Grid>
         </Grid>
       );

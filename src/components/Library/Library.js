@@ -2,6 +2,7 @@ import { Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
 import PlaylistItem from '../PlaylistItem/PlaylistItem';
+import { connect } from 'react-redux';
 
 function Library({ playlists, loading }) {
   const renderPlaylistItems = () => {
@@ -34,4 +35,11 @@ function Library({ playlists, loading }) {
   );
 }
 
-export default Library;
+const mapStateToProps = (state) => {
+  return {
+    playlists: state.playlist.items,
+    loading: state.playlist.loading,
+  };
+};
+
+export default connect(mapStateToProps)(Library);

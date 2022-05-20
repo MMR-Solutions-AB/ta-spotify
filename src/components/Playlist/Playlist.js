@@ -1,8 +1,39 @@
 import React from 'react';
 import { Avatar, Box, Typography } from '@mui/material';
 import SongTable from '../SongTable/SongTable';
+import { useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
 
-export default function Playlist({ songs }) {
+function Playlist({ spotifyApi, loading }) {
+  const { playlistId } = useParams();
+  const [playlistInfo, setPlaylistInfo] = useState();
+  const [songs, setSongs] = useState([]);
+
+  useEffect(() => {
+    const getData = async () => {
+      const playlistDetails = await spotifyApi.getPlaylist(playlistId);
+      setPlaylistInfo({
+        image: playlistDetails.body.images[0].url,
+        name: playlistDetails.body.name,
+      });
+
+      const allSongs = await spotifyApi.getPlaylistTracks(playlistId);
+      const formattedSongs = formatSongData(allSongs.body.items);
+      setSongs(formattedSongs);
+    };
+    getData();
+  }, [playlistId]);
+
+  const formatSongData = (songsInPlaylist) => {
+    return songsInPlaylist.map((song, i) => {
+      const { track } = song;
+      track.contextUri = `spotify:playlist:${playlistId}`;
+      track.position = i;
+      return track;
+    });
+  };
+
   return (
     <Box
       sx={{
@@ -26,7 +57,7 @@ export default function Playlist({ songs }) {
         }}
       >
         <Avatar
-          src='/Justin-Bieber.png'
+          src={playlistInfo?.image}
           alt='logo'
           variant='square'
           sx={{
@@ -40,7 +71,7 @@ export default function Playlist({ songs }) {
             PLAYLIST
           </Typography>
           <Typography sx={{ fontSize: { xs: 42, md: 72 }, fontWeight: 900 }}>
-            Code life
+            {playlistInfo?.name}
           </Typography>
         </Box>
       </Box>
@@ -48,3 +79,11 @@ export default function Playlist({ songs }) {
     </Box>
   );
 }
+
+const mapStateToProps = (state) => {
+  return {
+    loading: state.playlist.loading,
+  };
+};
+
+export default connect(mapStateToProps)(Playlist);

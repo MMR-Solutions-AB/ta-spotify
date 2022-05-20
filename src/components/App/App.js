@@ -11,17 +11,9 @@ import Login from '../Login/Login';
 import { useEffect } from 'react';
 import { connect } from 'react-redux';
 import SpotifyWebApi from 'spotify-web-api-node';
-import { fetchUser } from '../../store/actions/index';
+import { fetchUser, fetchPlaylist } from '../../store/actions/index';
 
-function App({ token, fetchUser }) {
-  const mockData = [
-    { name: 'Rock', playlistId: 123, image: '/Justin-Bieber.png' },
-    { name: 'Pop', playlistId: 646, image: '/Justin-Bieber.png' },
-    { name: 'Hip hop', playlistId: 834, image: '/Justin-Bieber.png' },
-    { name: 'X-mas', playlistId: 5503, image: '/Justin-Bieber.png' },
-    { name: 'Code life', playlistId: 4832, image: '/Justin-Bieber.png' },
-  ];
-
+function App({ token, fetchUser, fetchPlaylist }) {
   const songs = [
     {
       image: '/Justin-Bieber.png',
@@ -103,6 +95,7 @@ function App({ token, fetchUser }) {
 
     const getData = async () => {
       fetchUser(spotifyApi);
+      fetchPlaylist(spotifyApi);
     };
 
     if (token) getData();
@@ -126,20 +119,17 @@ function App({ token, fetchUser }) {
               overflowY: 'auto',
             }}
           >
-            <SideNav playlists={mockData} />
+            <SideNav />
             <Routes>
               <Route path='/' element={<Home />} />
               <Route
                 path='/search'
                 element={<h1 style={{ color: 'white' }}>Search</h1>}
               />
-              <Route
-                path='/library'
-                element={<Library playlists={mockData} />}
-              />
+              <Route path='/library' element={<Library />} />
               <Route
                 path='/playlist/:playlistId'
-                element={<Playlist songs={songs} />}
+                element={<Playlist songs={songs} spotifyApi={spotifyApi} />}
               />
             </Routes>
           </Box>
@@ -170,16 +160,17 @@ function App({ token, fetchUser }) {
   );
 }
 
-const mapDispatch = (dispatch) => {
+const mapDispatchToProps = (dispatch) => {
   return {
     fetchUser: (data) => dispatch(fetchUser(data)),
+    fetchPlaylist: (data) => dispatch(fetchPlaylist(data)),
   };
 };
 
-const mapState = (state) => {
+const mapStateToProps = (state) => {
   return {
     token: state.auth.token,
   };
 };
 
-export default connect(mapState, mapDispatch)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);
