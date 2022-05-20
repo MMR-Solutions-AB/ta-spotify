@@ -3,6 +3,8 @@ import SideNav from "../SideNav/SideNav.js";
 import Playlist from "../Playlist/Playlist.js";
 import { Box } from "@mui/material";
 import MobilNav from "../MobileNav/MobileNav";
+import { Routes, Route } from "react-router-dom";
+import Player from "../Player/Player";
 
 const mockData = [
   { name: "Rock", playlistId: 123, image: "/Justin-Bieber.png" },
@@ -18,21 +20,21 @@ const songs = [
     title: "Holy",
     artist: "Justin Bieber",
     album: "No clue",
-    duration: 180,
+    duration: 155,
   },
   {
     image: "/Justin-Bieber.png",
     title: "Holy",
     artist: "Justin Bieber",
     album: "No clue",
-    duration: 180,
+    duration: 162,
   },
   {
     image: "/Justin-Bieber.png",
     title: "Holy",
     artist: "Justin Bieber",
     album: "No clue",
-    duration: 180,
+    duration: 181,
   },
   {
     image: "/Justin-Bieber.png",
@@ -98,8 +100,23 @@ function App() {
       >
         <Box sx={{ flex: 1, overflowY: "auto", display: "flex" }}>
           <SideNav playlists={mockData} />
-          <Playlist songs={songs} />
+          <Routes>
+            <Route path="/playlist/:id" element={<Playlist songs={songs} />} />
+            <Route
+              path="/search"
+              element={<h1 style={{ color: "white" }}>Search</h1>}
+            />
+            <Route
+              path="/library"
+              element={<h1 style={{ color: "white" }}>Library</h1>}
+            />
+            <Route
+              path="/"
+              element={<h1 style={{ color: "white" }}>Home</h1>}
+            />
+          </Routes>
         </Box>
+        <Player />
         <MobilNav />
         <Banner />
       </Box>

@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { Box, BottomNavigation, BottomNavigationAction } from "@mui/material";
 import { Home, Search, List } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 const MobileNav = () => {
   const [value, setValue] = useState(0);
+  const navigate = useNavigate();
 
   const styledNav = { color: "text.secondary" };
 
@@ -17,12 +19,23 @@ const MobileNav = () => {
           setValue(newValue);
         }}
       >
-        <BottomNavigationAction sx={styledNav} label="Home" icon={<Home />} />
-        <BottomNavigationAction sx={styledNav} label="Sök" icon={<Search />} />
+        <BottomNavigationAction
+          sx={styledNav}
+          label="Home"
+          icon={<Home />}
+          onClick={() => navigate("/")}
+        />
+        <BottomNavigationAction
+          sx={styledNav}
+          label="Sök"
+          icon={<Search />}
+          onClick={() => navigate("/search")}
+        />
         <BottomNavigationAction
           sx={styledNav}
           label="Ditt bibliotek"
           icon={<List />}
+          onClick={() => navigate("/library")}
         />
       </BottomNavigation>
     </Box>
