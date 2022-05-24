@@ -1,12 +1,12 @@
-import React, { useEffect } from "react";
-import { formatTime } from "../../utils/functions";
-import PlayArrowIcon from "@mui/icons-material/PlayCircleFilledRounded";
-import PauseArrowIcon from "@mui/icons-material/PauseCircleFilledRounded";
-import SkipNextIcon from "@mui/icons-material/SkipNext";
-import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
-import { IconButton, Grid, Stack, Typography, Slider } from "@mui/material";
-import { connect } from "react-redux";
-import { pause, playNewSong, setProgress } from "../../store/actions/index";
+import React, { useEffect } from 'react';
+import { formatTime } from '../../utils/functions';
+import PlayArrowIcon from '@mui/icons-material/PlayCircleFilledRounded';
+import PauseArrowIcon from '@mui/icons-material/PauseCircleFilledRounded';
+import SkipNextIcon from '@mui/icons-material/SkipNext';
+import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
+import { IconButton, Grid, Stack, Typography, Slider } from '@mui/material';
+import { connect } from 'react-redux';
+import { pause, playNewSong, setProgress } from '../../store/actions/index';
 
 function PlayerController({
   sliderStyle,
@@ -70,10 +70,10 @@ function PlayerController({
     <Grid
       item
       sx={{
-        display: "flex",
+        display: 'flex',
         flex: 1,
-        justifyContent: { xs: "flex-end", md: "center" },
-        alignItems: "center",
+        justifyContent: { xs: 'flex-end', md: 'center' },
+        alignItems: 'center',
       }}
     >
       <Stack
@@ -81,23 +81,23 @@ function PlayerController({
         direction="column"
         justify="center"
         alignItems="center"
-        sx={{ width: "100%" }}
+        sx={{ width: '100%' }}
       >
         <Stack
           spacing={1}
           direction="row"
           justifyContent="center"
           alignItems="center"
-          sx={{ width: "100%" }}
+          sx={{ width: '100%' }}
         >
           <IconButton
             size="small"
-            sx={{ color: "white" }}
+            sx={{ color: 'white' }}
             onClick={handeOnSkipPrev}
           >
             <SkipPreviousIcon sx={{ width: 28, height: 28 }} />
           </IconButton>
-          <IconButton size="small" sx={{ color: "white" }} onClick={togglePlay}>
+          <IconButton size="small" sx={{ color: 'white' }} onClick={togglePlay}>
             {playing ? (
               <PauseArrowIcon sx={{ width: 38, height: 38 }} />
             ) : (
@@ -106,7 +106,7 @@ function PlayerController({
           </IconButton>
           <IconButton
             size="small"
-            sx={{ color: "white" }}
+            sx={{ color: 'white' }}
             onClick={handleOnSkipNext}
           >
             <SkipNextIcon sx={{ width: 28, height: 28 }} />
@@ -117,11 +117,11 @@ function PlayerController({
           justifyContent="center"
           direction="row"
           alignItems="center"
-          sx={{ width: "75%" }}
+          sx={{ width: '75%' }}
         >
           <Typography
             variant="body1"
-            sx={{ color: "text.secondary", fontSize: 12 }}
+            sx={{ color: 'text.secondary', fontSize: 12 }}
           >
             {formatTime(progress)}
           </Typography>
@@ -137,7 +137,7 @@ function PlayerController({
           />
           <Typography
             variant="body1"
-            sx={{ color: "text.secondary", fontSize: 12 }}
+            sx={{ color: 'text.secondary', fontSize: 12 }}
           >
             {formatTime(duration)}
           </Typography>
