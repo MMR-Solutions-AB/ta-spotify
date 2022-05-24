@@ -7,7 +7,6 @@ import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
 import { IconButton, Grid, Stack, Typography, Slider } from "@mui/material";
 import { connect } from "react-redux";
 import { pause, playNewSong, setProgress } from "../../store/actions/index";
-import { spotifyApi } from "../../index.js";
 
 function PlayerController({
   sliderStyle,
@@ -19,6 +18,7 @@ function PlayerController({
   loading,
   playNewSong,
   setProgress,
+  spotifyApi,
 }) {
   const togglePlay = async () => {
     if (loading) return;

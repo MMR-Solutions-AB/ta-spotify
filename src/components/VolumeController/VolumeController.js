@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { VolumeDown, VolumeUp, VolumeOff } from '@mui/icons-material';
-import { Grid, Stack, Slider } from '@mui/material';
+import React, { useState } from "react";
+import { VolumeDown, VolumeUp, VolumeOff } from "@mui/icons-material";
+import { Grid, Stack, Slider } from "@mui/material";
 
-export default function VolumeController({ sliderStyle }) {
+export default function VolumeController({ sliderStyle, spotifyApi }) {
   const defaultVolume = 40;
   const [volume, setVolume] = useState(defaultVolume);
   const handleVolumeChange = (e, v) => {
@@ -13,16 +13,16 @@ export default function VolumeController({ sliderStyle }) {
       item
       xs={3}
       sx={{
-        display: { xs: 'none', md: 'flex' },
-        alignItems: 'center',
-        justifyContent: 'flex-end',
+        display: { xs: "none", md: "flex" },
+        alignItems: "center",
+        justifyContent: "flex-end",
       }}
     >
       <Stack
         spacing={2}
-        direction='row'
-        alignItems='center'
-        sx={{ width: 150, color: 'text.secondary' }}
+        direction="row"
+        alignItems="center"
+        sx={{ width: 150, color: "text.secondary" }}
       >
         {volume === 0 ? (
           <VolumeOff />
@@ -35,7 +35,7 @@ export default function VolumeController({ sliderStyle }) {
           min={0}
           max={100}
           step={1}
-          aria-label='Volume'
+          aria-label="Volume"
           value={volume}
           onChange={handleVolumeChange}
           sx={sliderStyle}

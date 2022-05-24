@@ -1,20 +1,20 @@
-import './App.css';
-import SideNav from '../SideNav/SideNav';
-import Playlist from '../Playlist/Playlist';
-import MobileNav from '../MobileNav/MobileNav';
-import { Box } from '@mui/material';
-import Player from '../Player/Player';
-import { Routes, Route } from 'react-router-dom';
-import Library from '../Library/Library';
-import Home from '../Home/Home';
-import Login from '../Login/Login';
-import { useEffect } from 'react';
-import { connect } from 'react-redux';
-import { fetchUser, fetchPlaylist, addDevice } from '../../store/actions/index';
+import "./App.css";
+import SideNav from "../SideNav/SideNav";
+import Playlist from "../Playlist/Playlist";
+import MobileNav from "../MobileNav/MobileNav";
+import { Box } from "@mui/material";
+import Player from "../Player/Player";
+import { Routes, Route } from "react-router-dom";
+import Library from "../Library/Library";
+import Home from "../Home/Home";
+import Login from "../Login/Login";
+import { useEffect } from "react";
+import { connect } from "react-redux";
+import { fetchUser, fetchPlaylist, addDevice } from "../../store/actions/index";
 
 const setupSpotifyConnect = (token, addDevice, spotifyApi) => {
   const player = new window.Spotify.Player({
-    name: 'Web Playback SDK Quick Start Player',
+    name: "Techover Spotify",
     getOAuthToken: (cb) => {
       cb(token);
     },
@@ -22,25 +22,25 @@ const setupSpotifyConnect = (token, addDevice, spotifyApi) => {
   });
 
   // Ready
-  player.addListener('ready', ({ device_id }) => {
+  player.addListener("ready", ({ device_id }) => {
     addDevice(device_id);
     spotifyApi.transferMyPlayback([device_id]);
   });
 
   // Not Ready
-  player.addListener('not_ready', ({ device_id }) => {
-    console.log('Device ID has gone offline', device_id);
+  player.addListener("not_ready", ({ device_id }) => {
+    console.log("Device ID has gone offline", device_id);
   });
 
-  player.addListener('initialization_error', ({ message }) => {
+  player.addListener("initialization_error", ({ message }) => {
     console.error(message);
   });
 
-  player.addListener('authentication_error', ({ message }) => {
+  player.addListener("authentication_error", ({ message }) => {
     console.error(message);
   });
 
-  player.addListener('account_error', ({ message }) => {
+  player.addListener("account_error", ({ message }) => {
     console.error(message);
   });
 
@@ -62,50 +62,50 @@ function App({ token, fetchUser, fetchPlaylist, spotifyApi, addDevice }) {
   }, [token, fetchUser]);
 
   return (
-    <div className='App'>
+    <div className="App">
       {token ? (
         <Box
           sx={{
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            flexDirection: 'column',
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
           }}
         >
           <Box
             sx={{
               flex: 1,
-              display: 'flex',
-              overflowY: 'auto',
+              display: "flex",
+              overflowY: "auto",
             }}
           >
             <SideNav />
             <Routes>
-              <Route path='/' element={<Home />} />
+              <Route path="/" element={<Home />} />
               <Route
-                path='/search'
-                element={<h1 style={{ color: 'white' }}>Search</h1>}
+                path="/search"
+                element={<h1 style={{ color: "white" }}>Search</h1>}
               />
-              <Route path='/library' element={<Library />} />
+              <Route path="/library" element={<Library />} />
               <Route
-                path='/playlist/:playlistId'
+                path="/playlist/:playlistId"
                 element={<Playlist spotifyApi={spotifyApi} />}
               />
             </Routes>
           </Box>
-          <Player />
+          <Player spotifyApi={spotifyApi} />
           <MobileNav />
           <Box
             px={3}
             sx={{
-              width: '100%',
+              width: "100%",
               height: 25,
-              backgroundColor: 'primary.main',
-              display: 'flex',
-              justifyContent: 'flex-end',
-              alignItems: 'center',
+              backgroundColor: "primary.main",
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "center",
               fontSize: 14,
-              boxSizing: 'border-box',
+              boxSizing: "border-box",
             }}
           >
             Made with ❤️ by Techover Academy 👨‍💻
@@ -113,7 +113,7 @@ function App({ token, fetchUser, fetchPlaylist, spotifyApi, addDevice }) {
         </Box>
       ) : (
         <Routes>
-          <Route path='/' element={<Login />} />
+          <Route path="/" element={<Login />} />
         </Routes>
       )}
     </div>

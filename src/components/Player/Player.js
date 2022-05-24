@@ -1,41 +1,40 @@
-import React, { useEffect } from 'react';
-import { Box, Grid, Typography, Avatar } from '@mui/material';
-import PlayerController from '../PlayerController/PlayerController';
-import VolumeController from '../VolumeController/VolumeController';
-import { connect } from 'react-redux';
-import { updateSongInfoStart } from '../../store/actions/index';
-import { spotifyApi } from '../../index';
+import React, { useEffect } from "react";
+import { Box, Grid, Typography, Avatar } from "@mui/material";
+import PlayerController from "../PlayerController/PlayerController";
+import VolumeController from "../VolumeController/VolumeController";
+import { connect } from "react-redux";
+import { updateSongInfoStart } from "../../store/actions/index";
 
-function Player({ updateSongInfoStart, title, image, artist }) {
+function Player({ updateSongInfoStart, title, image, artist, spotifyApi }) {
   const sliderStyle = {
-    color: '#fff',
+    color: "#fff",
     height: 4,
     padding: 0,
-    width: '100%',
-    '& .Mui-focusVisible': {
-      boxShadow: 'none',
+    width: "100%",
+    "& .Mui-focusVisible": {
+      boxShadow: "none",
     },
-    '& .MuiSlider-thumb': {
+    "& .MuiSlider-thumb": {
       width: 0,
       height: 0,
-      '&:hover': {
-        boxShadow: 'none',
+      "&:hover": {
+        boxShadow: "none",
       },
-      '&:focus': {
-        boxShadow: 'none',
+      "&:focus": {
+        boxShadow: "none",
       },
     },
-    '&:hover': {
-      '& .MuiSlider-track': {
-        backgroundColor: 'primary.main',
+    "&:hover": {
+      "& .MuiSlider-track": {
+        backgroundColor: "primary.main",
       },
-      '& .MuiSlider-thumb': {
+      "& .MuiSlider-thumb": {
         width: 12,
         height: 12,
       },
     },
-    '& .MuiSlider-track': {
-      border: 'none',
+    "& .MuiSlider-track": {
+      border: "none",
     },
   };
 
@@ -48,38 +47,38 @@ function Player({ updateSongInfoStart, title, image, artist }) {
         container
         px={3}
         sx={{
-          backgroundColor: 'background.paper',
+          backgroundColor: "background.paper",
           height: 100,
-          width: '100%',
-          borderTop: '1px solid #292929',
+          width: "100%",
+          borderTop: "1px solid #292929",
         }}
       >
         <Grid
           item
           xs={3}
           sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'flex-start',
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "flex-start",
           }}
         >
           <Avatar
             src={image?.url}
-            alt='logo'
-            variant='square'
+            alt="logo"
+            variant="square"
             sx={{ width: 56, height: 56, marginRight: 2 }}
           />
           <Box>
-            <Typography sx={{ color: 'white', fontSize: 14 }}>
+            <Typography sx={{ color: "white", fontSize: 14 }}>
               {title}
             </Typography>
-            <Typography sx={{ color: 'text.secondary', fontSize: 12 }}>
+            <Typography sx={{ color: "text.secondary", fontSize: 12 }}>
               {artist}
             </Typography>
           </Box>
         </Grid>
-        <PlayerController sliderStyle={sliderStyle} />
-        <VolumeController sliderStyle={sliderStyle} />
+        <PlayerController sliderStyle={sliderStyle} spotifyApi={spotifyApi} />
+        <VolumeController sliderStyle={sliderStyle} spotifyApi={spotifyApi} />
       </Grid>
     </Box>
   );
