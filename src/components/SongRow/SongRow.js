@@ -1,5 +1,5 @@
 import React from "react";
-import { Avatar, Box, Typography, Grid, Divider } from "@mui/material";
+import { Avatar, Box, Typography, Grid } from "@mui/material";
 import { formatTime } from "../../utilities/functions";
 
 const SongRow = ({ image, title, artist, album, duration, i }) => {
