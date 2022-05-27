@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Box, Grid, Typography, Avatar } from '@mui/material';
 import PlayerController from '../PlayerController/PlayerController';
 import VolumeController from '../VolumeController/VolumeController';
+import { connect } from 'react-redux';
+import { updateSongInfoStart } from '../../store/actions/index';
 
-export default function Player() {
+function Player({ updateSongInfoStart, title, image, artist, spotifyApi }) {
   const sliderStyle = {
     color: '#fff',
     height: 4,
@@ -35,6 +37,11 @@ export default function Player() {
       border: 'none',
     },
   };
+
+  useEffect(() => {
+    updateSongInfoStart(spotifyApi);
+  }, []);
+
   return (
     <Box>
       <Grid
@@ -57,21 +64,40 @@ export default function Player() {
           }}
         >
           <Avatar
-            src='/Justin-Bieber.png'
-            alt='logo'
-            variant='square'
+            src={image?.url}
+            alt="logo"
+            variant="square"
             sx={{ width: 56, height: 56, marginRight: 2 }}
           />
           <Box>
-            <Typography sx={{ color: 'white', fontSize: 14 }}>Holy</Typography>
+            <Typography sx={{ color: 'white', fontSize: 14 }}>
+              {title}
+            </Typography>
             <Typography sx={{ color: 'text.secondary', fontSize: 12 }}>
-              Justin Bieber
+              {artist}
             </Typography>
           </Box>
         </Grid>
-        <PlayerController sliderStyle={sliderStyle} />
-        <VolumeController sliderStyle={sliderStyle} />
+        <PlayerController sliderStyle={sliderStyle} spotifyApi={spotifyApi} />
+        <VolumeController sliderStyle={sliderStyle} spotifyApi={spotifyApi} />
       </Grid>
     </Box>
   );
 }
+
+const mapStateToProps = (state) => {
+  const { title, image, artist } = state.player;
+  return {
+    title,
+    image,
+    artist,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    updateSongInfoStart: (api) => dispatch(updateSongInfoStart(api)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Player);

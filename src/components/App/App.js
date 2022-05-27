@@ -10,99 +10,58 @@ import Home from '../Home/Home';
 import Login from '../Login/Login';
 import { useEffect } from 'react';
 import { connect } from 'react-redux';
-import SpotifyWebApi from 'spotify-web-api-node';
-import { fetchUser, fetchPlaylist } from '../../store/actions/index';
+import { fetchUser, fetchPlaylist, addDevice } from '../../store/actions/index';
 
-function App({ token, fetchUser, fetchPlaylist }) {
-  const songs = [
-    {
-      image: '/Justin-Bieber.png',
-      title: 'Holy',
-      artist: 'Justin Bieber',
-      album: 'No clue',
-      duration: 180,
-    },
-    {
-      image: '/Justin-Bieber.png',
-      title: 'Holy',
-      artist: 'Justin Bieber',
-      album: 'No clue',
-      duration: 180,
-    },
-    {
-      image: '/Justin-Bieber.png',
-      title: 'Holy',
-      artist: 'Justin Bieber',
-      album: 'No clue',
-      duration: 180,
-    },
-    {
-      image: '/Justin-Bieber.png',
-      title: 'Holy',
-      artist: 'Justin Bieber',
-      album: 'No clue',
-      duration: 180,
-    },
-    {
-      image: '/Justin-Bieber.png',
-      title: 'Holy',
-      artist: 'Justin Bieber',
-      album: 'No clue',
-      duration: 180,
-    },
-    {
-      image: '/Justin-Bieber.png',
-      title: 'Holy',
-      artist: 'Justin Bieber',
-      album: 'No clue',
-      duration: 180,
-    },
-    {
-      image: '/Justin-Bieber.png',
-      title: 'Holy',
-      artist: 'Justin Bieber',
-      album: 'No clue',
-      duration: 180,
-    },
-    {
-      image: '/Justin-Bieber.png',
-      title: 'Holy',
-      artist: 'Justin Bieber',
-      album: 'No clue',
-      duration: 180,
-    },
-    {
-      image: '/Justin-Bieber.png',
-      title: 'Holy',
-      artist: 'Justin Bieber',
-      album: 'No clue',
-      duration: 180,
-    },
-    {
-      image: '/Justin-Bieber.png',
-      title: 'Holy',
-      artist: 'Justin Bieber',
-      album: 'No clue',
-      duration: 180,
-    },
-  ];
-
-  const spotifyApi = new SpotifyWebApi();
-
+function App({ token, fetchUser, fetchPlaylist, spotifyApi, addDevice }) {
   useEffect(() => {
-    // Set up spotify:
-    spotifyApi.setAccessToken(token);
-
     const getData = async () => {
       fetchUser(spotifyApi);
       fetchPlaylist(spotifyApi);
     };
 
-    if (token) getData();
+    if (token) {
+      window.onSpotifyWebPlaybackSDKReady = () => {
+        setupSpotifyConnect(token, addDevice, spotifyApi);
+      };
+      getData();
+    }
   }, [token, fetchUser]);
 
+  const setupSpotifyConnect = (token, addDevice, spotifyApi) => {
+    const player = new window.Spotify.Player({
+      name: 'Techover Spotify',
+      getOAuthToken: (cb) => {
+        cb(token);
+      },
+      volume: 0.5,
+    });
+
+    player.addListener('ready', ({ device_id }) => {
+      addDevice(device_id);
+      spotifyApi.getMyCurrentPlaybackState().then((data) => console.log(data));
+    });
+
+    player.addListener('not_ready', ({ device_id }) => {
+      console.log('Device ID has gone offline', device_id);
+    });
+
+    player.addListener('initialization_error', ({ message }) => {
+      console.error(message);
+    });
+
+    player.addListener('authentication_error', ({ message }) => {
+      console.error(message);
+    });
+
+    player.addListener('account_error', ({ message }) => {
+      console.error(message);
+    });
+
+    player.connect();
+  };
+
   return (
-    <div className='App'>
+    <div className="App">
       {token ? (
         <Box
           sx={{
@@ -121,19 +80,19 @@ function App({ token, fetchUser, fetchPlaylist }) {
           >
             <SideNav />
             <Routes>
-              <Route path='/' element={<Home />} />
+              <Route path="/" element={<Home />} />
               <Route
-                path='/search'
+                path="/search"
                 element={<h1 style={{ color: 'white' }}>Search</h1>}
               />
-              <Route path='/library' element={<Library />} />
+              <Route path="/library" element={<Library />} />
               <Route
-                path='/playlist/:playlistId'
-                element={<Playlist songs={songs} spotifyApi={spotifyApi} />}
+                path="/playlist/:playlistId"
+                element={<Playlist spotifyApi={spotifyApi} />}
               />
             </Routes>
           </Box>
-          <Player />
+          <Player spotifyApi={spotifyApi} />
           <MobileNav />
           <Box
             px={3}
@@ -153,7 +112,7 @@ function App({ token, fetchUser, fetchPlaylist }) {
         </Box>
       ) : (
         <Routes>
-          <Route path='/' element={<Login />} />
+          <Route path="/" element={<Login />} />
         </Routes>
       )}
     </div>
@@ -164,6 +123,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     fetchUser: (data) => dispatch(fetchUser(data)),
     fetchPlaylist: (data) => dispatch(fetchPlaylist(data)),
+    addDevice: (device_id) => dispatch(addDevice(device_id)),
   };
 };
 
