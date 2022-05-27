@@ -58,19 +58,17 @@ export const updateSongInfoStart = (spotifyApi) => {
   return async (dispatch) => {
     dispatch(updatePlayerStart());
     try {
-      const song = await spotifyApi.getMyRecentlyPlayedTracks({ limit: 1 });
-      const item = song.body.items[0].track;
-      const duration = item.duration_ms / 1000;
-      const data = {
+      const data = await spotifyApi.getMyCurrentPlaybackState();
+      const item = data.body.item;
+      const song = {
         title: item.name,
         image: item.album.images[1],
         artist: item.artists[0].name,
-        duration,
-        progress: 0,
+        duration: item.duration_ms / 1000,
+        progress: data.body.progress_ms / 1000,
       };
-      dispatch(updatePlayerSuccess(data));
+      dispatch(updatePlayerSuccess(song));
     } catch (error) {
-      console.log(error);
       dispatch(updatePlayerFail(error));
     }
   };

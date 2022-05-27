@@ -41,6 +41,7 @@ function Player({ updateSongInfoStart, title, image, artist, spotifyApi }) {
   useEffect(() => {
     updateSongInfoStart(spotifyApi);
   }, []);
+
   return (
     <Box>
       <Grid
