@@ -6,7 +6,6 @@ import SongRow from "../SongRow/SongRow";
 const SongTable = ({ songs }) => {
   const renderSongs = () =>
     songs.map((song, i) => {
-      console.log(song);
       const albumName = song.album.name;
       //TODO will cause crashes when there are no images
       const image = song.album.images[0].url;
