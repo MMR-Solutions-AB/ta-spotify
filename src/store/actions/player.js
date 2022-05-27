@@ -60,18 +60,14 @@ export const updateSongInfoStart = (spotifyApi) => {
     try {
       const data = await spotifyApi.getMyCurrentPlaybackState();
       if (data.body && data.body.is_playing) {
-        const item = data.body.item;
-        const song = {
-          title: item.name,
-          image: item.album.images[1],
-          artist: item.artists[0].name,
-          duration: item.duration_ms / 1000,
-          progress: data.body.progress_ms / 1000,
-        };
+        const song = formatSongInfo(data.body.item, data.body.progress_ms);
         dispatch(updatePlayerSuccess(song));
       } else {
         const data = await spotifyApi.getMyRecentlyPlayedTracks({ limit: 1 });
-        console.log("getMyRecentlyPlayedTracks", data);
+        if (data.body) {
+          const song = formatSongInfo(data.body.items[0].track, 0);
+          dispatch(updatePlayerSuccess(song));
+        }
       }
     } catch (error) {
       dispatch(updatePlayerFail(error));
@@ -90,5 +86,15 @@ const getMyCurrentPlayingTrack = async (spotifyApi) => {
     artist: item.artists[0].name,
     duration,
     progress,
+  };
+};
+
+const formatSongInfo = (item, progress_ms) => {
+  return {
+    title: item.name,
+    image: item.album.images[1],
+    artist: item.artists[0].name,
+    duration: item.duration_ms / 1000,
+    progress: progress_ms / 1000,
   };
 };
