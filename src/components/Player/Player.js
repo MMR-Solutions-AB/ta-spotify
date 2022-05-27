@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Box, Grid, Typography, Avatar } from "@mui/material";
 import PlayerControlls from "../PlayerControlls/PlayerControlls";
 import VolumeControlls from "../VolumeControlls/VolumeControlls";
+import { connect } from "react-redux";
+import { updateSongInfoStart } from "../../store/actions/index";
 
-const Player = () => {
+const Player = ({ updateSongInfoStart, title, image, artist, spotifyApi }) => {
   const sliderStyle = {
     color: "#fff",
     height: 4,
@@ -36,6 +38,10 @@ const Player = () => {
     },
   };
 
+  useEffect(() => {
+    updateSongInfoStart(spotifyApi);
+  }, []);
+
   return (
     <Box>
       <Grid
@@ -58,25 +64,40 @@ const Player = () => {
           }}
         >
           <Avatar
-            src="/Justin-Bieber.png"
-            alt="Bieber"
+            src={image?.url}
+            alt="logo"
             variant="square"
             sx={{ width: 56, height: 56, marginRight: 2 }}
           />
           <Box>
             <Typography sx={{ color: "text.primary", fontSize: 14 }}>
-              Holy
+              {title}
             </Typography>
             <Typography sx={{ color: "text.secondary", fontSize: 12 }}>
-              Justin Bieber
+              {artist}
             </Typography>
           </Box>
         </Grid>
-        <PlayerControlls sliderStyle={sliderStyle} />
-        <VolumeControlls sliderStyle={sliderStyle} />
+        <PlayerControlls sliderStyle={sliderStyle} spotifyApi={spotifyApi} />
+        <VolumeControlls sliderStyle={sliderStyle} spotifyApi={spotifyApi} />
       </Grid>
     </Box>
   );
 };
 
-export default Player;
+const mapStateToProps = (state) => {
+  const { title, image, artist } = state.player;
+  return {
+    title,
+    image,
+    artist,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    updateSongInfoStart: (api) => dispatch(updateSongInfoStart(api)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Player);
