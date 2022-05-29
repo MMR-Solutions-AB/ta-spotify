@@ -12,8 +12,7 @@ const SongTable = ({ songs, loading, spotifyApi }) => {
 
     return songs.map((song, i) => {
       const albumName = song.album.name;
-      const image =
-        song.album.images.length > 0 ? song.album.images[0].url : "";
+      const images = song.album.images;
       const title = song.name;
       const artist = song.artists[0].name;
       const duration = song.duration_ms / 1000;
@@ -21,7 +20,7 @@ const SongTable = ({ songs, loading, spotifyApi }) => {
       return (
         <SongRow
           album={albumName}
-          image={image}
+          images={images}
           title={title}
           artist={artist}
           duration={duration}

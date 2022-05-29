@@ -28,14 +28,39 @@ export const updatePlayerSuccess = (payload) => {
   return { type: actionTypes.UPDATE_PLAYER_SUCCESS, payload };
 };
 
+export const playSpecifiedSong = (spotifyApi, song) => {
+  return async (dispatch) => {
+    dispatch(updatePlayerStart());
+    try {
+      await spotifyApi.play(song);
+      const { title, image, artist, duration, position } = song;
+      dispatch(
+        updatePlayerSuccess({
+          title,
+          image,
+          artist,
+          duration,
+          position,
+          progress: 0,
+        })
+      );
+      dispatch(play());
+    } catch (e) {
+      dispatch(updatePlayerFail(e));
+    }
+  };
+};
+
 export const playNewSong = (spotifyApi, song = {}) => {
   return async (dispatch) => {
     dispatch(updatePlayerStart());
     try {
       await spotifyApi.play(song);
-      const data = await getMyCurrentPlayingTrack(spotifyApi);
-      dispatch(updatePlayerSuccess(data));
-      dispatch(play());
+      setTimeout(async () => {
+        const data = await getMyCurrentPlayingTrack(spotifyApi);
+        dispatch(updatePlayerSuccess(data));
+        dispatch(play());
+      }, 1000);
     } catch (e) {
       dispatch(updatePlayerFail(e));
     }
@@ -55,18 +80,31 @@ export const updateSongInfo = (spotifyApi) => {
 };
 
 export const updateSongInfoStart = (spotifyApi) => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
     dispatch(updatePlayerStart());
     try {
-      const data = await spotifyApi.getMyCurrentPlaybackState();
-      if (data.body && data.body.is_playing) {
-        const song = formatSongInfo(data.body.item, data.body.progress_ms);
-        dispatch(updatePlayerSuccess(song));
+      const state = getState();
+      const { device_id } = state.player;
+      const playback = await spotifyApi.getMyCurrentPlaybackState();
+
+      //   Check if a device is playing music right now
+      if (playback.body && playback.body.is_playing) {
+        await spotifyApi.transferMyPlayback([device_id], true);
+        pause();
+        dispatch(updateSongInfo(spotifyApi));
       } else {
-        const data = await spotifyApi.getMyRecentlyPlayedTracks({ limit: 1 });
-        if (data.body) {
-          const song = formatSongInfo(data.body.items[0].track, 0);
-          dispatch(updatePlayerSuccess(song));
+        await spotifyApi.transferMyPlayback([device_id], false);
+        const currentSong = await spotifyApi.getMyCurrentPlayingTrack();
+        if (currentSong.body) {
+          dispatch(updateSongInfo(spotifyApi));
+        } else {
+          const id = setInterval(async () => {
+            const currentSong = await spotifyApi.getMyCurrentPlayingTrack();
+            if (currentSong.body) {
+              clearInterval(id);
+              dispatch(updateSongInfo(spotifyApi));
+            }
+          }, 500);
         }
       }
     } catch (error) {

@@ -2,10 +2,10 @@ import React from "react";
 import { Avatar, Box, Typography, Grid, Skeleton } from "@mui/material";
 import { formatTime } from "../../utilities/functions";
 import { connect } from "react-redux";
-import { playNewSong } from "../../store/actions/index";
+import { playSpecifiedSong } from "../../store/actions/index";
 
 const SongRow = ({
-  image,
+  images,
   title,
   artist,
   album,
@@ -15,15 +15,22 @@ const SongRow = ({
   spotifyApi,
   contextUri,
   position,
-  playNewSong,
+  playSpecifiedSong,
 }) => {
+  const image = images.length > 0 ? images[0] : null;
+
   const onRowClick = async () => {
     const song = {
       context_uri: contextUri,
       offset: { position },
       position_ms: 0,
+      title,
+      image: image ? image : {},
+      artist,
+      duration,
+      position,
     };
-    await playNewSong(spotifyApi, song);
+    await playSpecifiedSong(spotifyApi, song);
   };
 
   return (
@@ -53,7 +60,7 @@ const SongRow = ({
         {loading ? (
           <Skeleton variant="rectangular" width={40} height={40} />
         ) : (
-          <Avatar src={image} alt={title} variant="square" />
+          <Avatar src={image.url} alt={title} variant="square" />
         )}
         <Box ml={1}>
           <Typography sx={{ fontSize: 16, color: "text.primary" }}>
@@ -103,7 +110,7 @@ const SongRow = ({
 
 const mapDispatch = (dispatch) => {
   return {
-    playNewSong: (api, song) => dispatch(playNewSong(api, song)),
+    playSpecifiedSong: (api, song) => dispatch(playSpecifiedSong(api, song)),
   };
 };
 

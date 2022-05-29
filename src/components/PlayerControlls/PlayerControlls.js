@@ -24,7 +24,6 @@ const PlayerControlls = ({
 
     if (!playing) {
       try {
-        await spotifyApi.transferMyPlayback([deviceId]);
         playNewSong(spotifyApi);
       } catch (e) {
         console.error(e);
