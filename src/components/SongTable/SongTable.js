@@ -1,14 +1,19 @@
 import React from "react";
-import { Avatar, Box, Typography, Grid, Divider } from "@mui/material";
+import { Box, Grid, Divider } from "@mui/material";
 import { AccessTimeRounded } from "@mui/icons-material";
 import SongRow from "../SongRow/SongRow";
 
-const SongTable = ({ songs }) => {
-  const renderSongs = () =>
-    songs.map((song, i) => {
+const SongTable = ({ songs, loading, spotifyApi }) => {
+  const renderSongs = () => {
+    if (loading)
+      return [1, 2, 3, 4, 5, 6].map((e, i) => (
+        <SongRow loading={true} key={i} i={i} />
+      ));
+
+    return songs.map((song, i) => {
       const albumName = song.album.name;
-      //TODO will cause crashes when there are no images
-      const image = song.album.images[0].url;
+      const image =
+        song.album.images.length > 0 ? song.album.images[0].url : "";
       const title = song.name;
       const artist = song.artists[0].name;
       const duration = song.duration_ms / 1000;
@@ -22,9 +27,13 @@ const SongTable = ({ songs }) => {
           duration={duration}
           key={i}
           i={i}
+          position={song.position}
+          contextUri={song.contextUri}
+          spotifyApi={spotifyApi}
         />
       );
     });
+  };
 
   return (
     <Box
