@@ -10,17 +10,54 @@ import Home from "../Home/Home";
 import Login from "../Login/Login";
 import { useEffect } from "react";
 import { connect } from "react-redux";
-import { fetchUser, fetchPlaylist } from "../../store/actions/index";
+import { fetchUser, fetchPlaylist, addDevice } from "../../store/actions/index";
 
-function App({ token, fetchUser, fetchPlaylist, spotifyApi }) {
+function App({ token, fetchUser, fetchPlaylist, spotifyApi, addDevice }) {
   useEffect(() => {
     const getData = async () => {
       fetchUser(spotifyApi);
       fetchPlaylist(spotifyApi);
     };
 
-    if (token) getData();
+    if (token) {
+      window.onSpotifyWebPlaybackSDKReady = () => {
+        setupSpotifyConnect(token, addDevice, spotifyApi);
+      }
+      getData();
+    }
   }, [token, fetchUser]);
+
+  const setupSpotifyConnect = (token, addDevice, spotifyApi) => {
+    const player = new window.Spotify.Player({
+      name: 'Techover Spotify',
+      getOAuthToken: (cb) => cb(token),
+      volume: 0.5
+    })
+
+    //  ***************
+    player.addListener("ready", ({ device_id }) => {
+      addDevice(device_id);
+    });
+
+    player.addListener("not_ready", ({ device_id }) => {
+      console.log("Device ID has gone offline", device_id);
+    });
+
+    player.addListener("initialization_error", ({ message }) => {
+      console.error(message);
+    });
+
+    player.addListener("authentication_error", ({ message }) => {
+      console.error(message);
+    });
+
+    player.addListener("account_error", ({ message }) => {
+      console.error(message);
+    });
+    //  ***************
+
+    player.connect();
+  }
 
   return (
     <Box className="App">
@@ -48,7 +85,7 @@ function App({ token, fetchUser, fetchPlaylist, spotifyApi }) {
               <Route path="/" element={<Home />} />
             </Routes>
           </Box>
-          <Player />
+          <Player spotifyApi={spotifyApi} />
           <MobilNav />
           <Banner />
         </Box>
@@ -89,6 +126,7 @@ const mapDispatch = (dispatch) => {
   return {
     fetchUser: (api) => dispatch(fetchUser(api)),
     fetchPlaylist: (api) => dispatch(fetchPlaylist(api)),
+    addDevice: (id) => dispatch(addDevice(id)),
   };
 };
 

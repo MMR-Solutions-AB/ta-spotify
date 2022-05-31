@@ -1,4 +1,3 @@
-import SpotifyWebApi from "spotify-web-api-node";
 import * as actionTypes from "./actionTypes";
 
 export const addDevice = (device_id) => {
@@ -22,11 +21,11 @@ export const updatePlayerStart = () => {
 };
 
 export const updatePlayerSuccess = (payload) => {
-  return { type: actionTypes.UPDATE_PLAYER_START, payload };
+  return { type: actionTypes.UPDATE_PLAYER_SUCCESS, payload };
 };
 
 export const updatePlayerFail = (error) => {
-  return { type: actionTypes.UPDATE_PLAYER_START, payload: error };
+  return { type: actionTypes.UPDATE_PLAYER_FAIL, payload: error };
 };
 
 export const playNewSong = (spotifyApi, song) => {
@@ -52,6 +51,45 @@ export const updateSongInfo = (spotifyApi) => {
       dispatch(updatePlayerSuccess(track));
     } catch (error) {
       dispatch(updatePlayerFail(error));
+    }
+  };
+};
+
+export const updateSongInfoStart = (spotifyApi) => {
+  return async (dispatch, getState) => {
+    dispatch(updatePlayerStart());
+    try {
+      const state = getState();
+      const { device_id } = state.player;
+      const playback = await spotifyApi.getMyCurrentPlaybackState();
+      console.log({ playback });
+
+      // Check if a device is playing music right now
+      if (playback.body && playback.body.is_playing) {
+        console.log({ playback });
+        await spotifyApi.transferMyPlayback([device_id], true);
+        dispatch(pause());
+        dispatch(updateSongInfo(spotifyApi));
+      } else {
+        await spotifyApi.transferMyPlayback([device_id], true);
+        const currentSong = await spotifyApi.getMyCurrentPlayingTrack();
+        if (currentSong.body) {
+          console.log({ currentSong });
+          dispatch(updateSongInfo(spotifyApi));
+        } else {
+          const id = setInterval(async () => {
+            const currentSong = await spotifyApi.getMyCurrentPlayingTrack();
+            console.log({ currentSong });
+            if (currentSong.body) {
+              clearInterval(id);
+              dispatch(updateSongInfo(spotifyApi));
+            }
+          }, 500);
+        }
+      }
+    } catch (e) {
+      console.log("errors");
+      dispatch(updatePlayerFail(e));
     }
   };
 };

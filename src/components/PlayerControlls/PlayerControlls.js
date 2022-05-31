@@ -1,11 +1,41 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { formatTime } from "../../utilities/functions";
-import { PlayArrow, SkipNext, SkipPrevious } from "@mui/icons-material";
+import { PlayArrow, SkipNext, SkipPrevious, Pause } from "@mui/icons-material";
 import { IconButton, Grid, Stack, Typography, Slider } from "@mui/material";
+import { connect } from "react-redux";
+import { pause, playNewSong, setProgress } from "../../store/actions/index";
 
-const PlayerControlls = ({ sliderStyle }) => {
+const PlayerControlls = ({
+  sliderStyle,
+  deviceId,
+  pause,
+  playing,
+  duration,
+  progress,
+  loading,
+  playNewSong,
+  setProgress,
+  spotifyApi,
+}) => {
   const skipStyle = { width: 28, height: 28 };
   const songDuration = 195;
+
+  const togglePlay = async () => {
+    if(loading) return;
+
+    if(!playing) {
+      // Om musiken INTE Spelar
+      try {
+        playNewSong(spotifyApi, {});
+      } catch(e) {
+        console.error(e);
+      }
+    } else {
+      // Om musiken Spelar
+      pause();
+      await spotifyApi.pause();
+    }
+  }
 
   return (
     <Grid
@@ -34,8 +64,8 @@ const PlayerControlls = ({ sliderStyle }) => {
           <IconButton size="small" sx={{ color: "text.primary" }}>
             <SkipPrevious sx={skipStyle} />
           </IconButton>
-          <IconButton size="small" sx={{ color: "text.primary" }}>
-            <PlayArrow sx={{ width: 38, heiht: 38 }} />
+          <IconButton size="small" sx={{ color: "text.primary" }} onClick={async () => togglePlay()} >
+            {playing ? <Pause sx={{ width: 38, height: 38 }} /> : <PlayArrow sx={{ width: 38, height: 38 }} /> }
           </IconButton>
           <IconButton size="small" sx={{ color: "text.primary" }}>
             <SkipNext sx={skipStyle} />
@@ -73,4 +103,23 @@ const PlayerControlls = ({ sliderStyle }) => {
   );
 };
 
-export default PlayerControlls;
+const mapState = (state) => {
+  const { playing, duration, progress, device_id, loading } = state.player;
+  return {
+    playing,
+    duration,
+    progress,
+    deviceId: device_id,
+    loading,
+  };
+};
+
+const mapDispatch = (dispatch) => {
+  return {
+    pause: () => dispatch(pause()),
+    playNewSong: (api) => dispatch(playNewSong(api)),
+    setProgress: (progress) => dispatch(setProgress(progress)),
+  }
+};
+
+export default connect(mapState, mapDispatch)(PlayerControlls);
