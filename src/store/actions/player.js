@@ -56,10 +56,10 @@ export const playNewSong = (spotifyApi, song = {}) => {
     dispatch(updatePlayerStart());
     try {
       await spotifyApi.play(song);
+      dispatch(play());
       setTimeout(async () => {
         const data = await getMyCurrentPlayingTrack(spotifyApi);
         dispatch(updatePlayerSuccess(data));
-        dispatch(play());
       }, 1000);
     } catch (e) {
       dispatch(updatePlayerFail(e));
