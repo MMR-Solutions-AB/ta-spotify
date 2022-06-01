@@ -8,11 +8,13 @@ import Player from "../Player/Player";
 import Library from "../Library/Library";
 import Home from "../Home/Home";
 import Login from "../Login/Login";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { fetchUser, fetchPlaylist, addDevice } from "../../store/actions/index";
 
 function App({ token, fetchUser, fetchPlaylist, spotifyApi, addDevice }) {
+  const [isPlayerReady, setIsPlayerReady] = useState(false);
+
   useEffect(() => {
     const getData = async () => {
       fetchUser(spotifyApi);
@@ -21,22 +23,22 @@ function App({ token, fetchUser, fetchPlaylist, spotifyApi, addDevice }) {
 
     if (token) {
       window.onSpotifyWebPlaybackSDKReady = () => {
-        setupSpotifyConnect(token, addDevice, spotifyApi);
-      }
+        setupSpotifyConnect(token, addDevice);
+      };
       getData();
     }
   }, [token, fetchUser]);
 
-  const setupSpotifyConnect = (token, addDevice, spotifyApi) => {
+  const setupSpotifyConnect = (token, addDevice) => {
     const player = new window.Spotify.Player({
-      name: 'Techover Spotify',
+      name: "Techover Spotify",
       getOAuthToken: (cb) => cb(token),
-      volume: 0.5
-    })
+      volume: 0.5,
+    });
 
-    //  ***************
     player.addListener("ready", ({ device_id }) => {
       addDevice(device_id);
+      setIsPlayerReady(true);
     });
 
     player.addListener("not_ready", ({ device_id }) => {
@@ -54,10 +56,9 @@ function App({ token, fetchUser, fetchPlaylist, spotifyApi, addDevice }) {
     player.addListener("account_error", ({ message }) => {
       console.error(message);
     });
-    //  ***************
 
     player.connect();
-  }
+  };
 
   return (
     <Box className="App">
@@ -85,13 +86,13 @@ function App({ token, fetchUser, fetchPlaylist, spotifyApi, addDevice }) {
               <Route path="/" element={<Home />} />
             </Routes>
           </Box>
-          <Player spotifyApi={spotifyApi} />
+          {isPlayerReady && <Player spotifyApi={spotifyApi} />}
           <MobilNav />
           <Banner />
         </Box>
       ) : (
         <Routes>
-          <Route path="/" element={<Login />} />
+          <Route path="*" element={<Login />} />
         </Routes>
       )}
     </Box>

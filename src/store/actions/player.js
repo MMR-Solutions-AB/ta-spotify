@@ -28,14 +28,41 @@ export const updatePlayerFail = (error) => {
   return { type: actionTypes.UPDATE_PLAYER_FAIL, payload: error };
 };
 
+export const playSpecifiedSong = (spotifyApi, song) => {
+  return async (dispatch) => {
+    dispatch(updatePlayerStart());
+    try {
+      await spotifyApi.play(song);
+      const { title, image, artist, duration, position } = song;
+      dispatch(
+        updatePlayerSuccess({
+          title,
+          image,
+          artist,
+          duration,
+          position,
+          progress: 0,
+        })
+      );
+      dispatch(play());
+    } catch (e) {
+      dispatch(updatePlayerFail(e));
+    }
+  };
+};
+
 export const playNewSong = (spotifyApi, song) => {
   return async (dispatch) => {
     dispatch(updatePlayerStart());
     try {
       await spotifyApi.play(song);
-      const track = await getMyCurrentPlayingTrack(spotifyApi);
       dispatch(play());
-      dispatch(updatePlayerSuccess(track));
+
+      // ajabaja
+      setTimeout(async () => {
+        const track = await getMyCurrentPlayingTrack(spotifyApi);
+        dispatch(updatePlayerSuccess(track));
+      }, 1000);
     } catch (error) {
       dispatch(updatePlayerFail(error));
     }
