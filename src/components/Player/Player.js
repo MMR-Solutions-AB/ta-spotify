@@ -5,8 +5,17 @@ import VolumeControlls from "../VolumeControlls/VolumeControlls";
 import { connect } from "react-redux";
 import { updateSongInfoStart } from "../../store/actions/index";
 import PlayerOverlay from "../PlayerOverlay/PlayerOverlay";
+import { openOverlay } from "../../store/actions/index";
 
-const Player = ({ updateSongInfoStart, title, image, artist, spotifyApi }) => {
+const Player = ({
+  updateSongInfoStart,
+  title,
+  image,
+  artist,
+  spotifyApi,
+  openOverlay,
+  playerOverlayOpen,
+}) => {
   const sliderStyle = {
     color: "#fff",
     height: 4,
@@ -43,8 +52,13 @@ const Player = ({ updateSongInfoStart, title, image, artist, spotifyApi }) => {
     updateSongInfoStart(spotifyApi);
   }, []);
 
+  const handleOpenOverlay = () => {
+    if (!playerOverlayOpen) {
+      openOverlay();
+    }
+  };
   return (
-    <Box>
+    <Box onClick={handleOpenOverlay}>
       <Grid
         container
         px={3}
@@ -57,7 +71,8 @@ const Player = ({ updateSongInfoStart, title, image, artist, spotifyApi }) => {
       >
         <Grid
           item
-          xs={3}
+          xs={12}
+          md={3}
           sx={{
             display: "flex",
             alignItems: "center",
@@ -79,26 +94,38 @@ const Player = ({ updateSongInfoStart, title, image, artist, spotifyApi }) => {
             </Typography>
           </Box>
         </Grid>
-        <PlayerControlls sliderStyle={sliderStyle} spotifyApi={spotifyApi} />
+        <Grid
+          item
+          sx={{
+            display: { xs: "none", md: "flex" },
+            flex: 1,
+            justifyContent: { xs: "flex-end", md: "center" },
+            alignItems: "center",
+          }}
+        >
+          <PlayerControlls sliderStyle={sliderStyle} spotifyApi={spotifyApi} />
+        </Grid>
         <VolumeControlls sliderStyle={sliderStyle} spotifyApi={spotifyApi} />
-        <PlayerOverlay sliderStyle={sliderStyle} spotifyApi={spotifyApi} />
       </Grid>
+      <PlayerOverlay sliderStyle={sliderStyle} spotifyApi={spotifyApi} />
     </Box>
   );
 };
 
 const mapStateToProps = (state) => {
-  const { title, image, artist } = state.player;
+  const { title, image, artist, playerOverlayOpen } = state.player;
   return {
     title,
     image,
     artist,
+    playerOverlayOpen,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     updateSongInfoStart: (api) => dispatch(updateSongInfoStart(api)),
+    openOverlay: () => dispatch(openOverlay()),
   };
 };
 
