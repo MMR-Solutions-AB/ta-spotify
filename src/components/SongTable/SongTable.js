@@ -12,7 +12,6 @@ const SongTable = ({ songs, loading, spotifyApi }) => {
     }
 
     return songs.map((song, i) => {
-      console.log(song.album);
       const albumName = song.album.name;
       const images = song.album.images;
       const title = song.name;
