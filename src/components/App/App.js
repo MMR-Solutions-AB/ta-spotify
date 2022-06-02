@@ -8,6 +8,7 @@ import Player from "../Player/Player";
 import Library from "../Library/Library";
 import Home from "../Home/Home";
 import Login from "../Login/Login";
+import Search from "../Search/Search";
 import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { fetchUser, fetchPlaylist, addDevice } from "../../store/actions/index";
@@ -81,7 +82,7 @@ function App({ token, fetchUser, fetchPlaylist, spotifyApi, addDevice }) {
               />
               <Route
                 path="/search"
-                element={<h1 style={{ color: "white" }}>Search</h1>}
+                element={<Search spotifyApi={spotifyApi} />}
               />
               <Route path="/library" element={<Library />} />
               <Route path="/" element={<Home />} />
