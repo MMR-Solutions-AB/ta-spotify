@@ -4,6 +4,7 @@ import PlayerControlls from "../PlayerControlls/PlayerControlls";
 import VolumeControlls from "../VolumeControlls/VolumeControlls";
 import { connect } from "react-redux";
 import { updateSongInfoStart } from "../../store/actions/index";
+import PlayerOverlay from "../PlayerOverlay/PlayerOverlay";
 
 const Player = ({ updateSongInfoStart, title, image, artist, spotifyApi }) => {
   const sliderStyle = {
@@ -80,6 +81,7 @@ const Player = ({ updateSongInfoStart, title, image, artist, spotifyApi }) => {
         </Grid>
         <PlayerControlls sliderStyle={sliderStyle} spotifyApi={spotifyApi} />
         <VolumeControlls sliderStyle={sliderStyle} spotifyApi={spotifyApi} />
+        <PlayerOverlay sliderStyle={sliderStyle} spotifyApi={spotifyApi} />
       </Grid>
     </Box>
   );
