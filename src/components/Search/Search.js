@@ -1,6 +1,7 @@
 import { Box, InputBase, Grid, Typography } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { useState } from "react";
+import SongTable from "../SongTable/SongTable";
 
 const boxStyle = {
   minHeight: "calc(100vh - 90px)",
@@ -16,11 +17,9 @@ const Search = ({ spotifyApi }) => {
   const formatSongData = (tracks) => {
     return tracks.map((track) => {
       return {
-        track: {
-          ...track,
-          contextUri: track.album.uri,
-          position: track.track_number - 1,
-        },
+        ...track,
+        contextUri: track.album.uri,
+        position: track.track_number - 1,
       };
     });
   };
@@ -80,9 +79,14 @@ const Search = ({ spotifyApi }) => {
               Search for Songs
             </Typography>
           ) : (
-            <Typography sx={{ color: "text.primary" }}>
-              Songs go here
-            </Typography>
+            // <Typography sx={{ color: "text.primary" }}>
+            //   Songs go here
+            // </Typography>
+            <SongTable
+              songs={songs}
+              loading={loading}
+              spotifyApi={spotifyApi}
+            />
           )}
         </Grid>
       </Grid>
