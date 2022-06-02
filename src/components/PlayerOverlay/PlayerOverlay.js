@@ -20,14 +20,20 @@ const PlayerOverlay = ({ sliderStyle, spotifyApi }) => {
     >
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Typography variant="body1">Cali bound</Typography>
+          <Typography variant="body1" sx={{ color: "text.primary" }}>
+            Cali bound
+          </Typography>
         </Grid>
         <Grid item xs={12}>
           <img src="" />
         </Grid>
         <Grid item xs={12}>
-          <Typography variant="body1">Cali bound</Typography>
-          <Typography variant="body2">Cali bound</Typography>
+          <Typography variant="body1" sx={{ color: "text.primary" }}>
+            Cali bound
+          </Typography>
+          <Typography variant="body2" sx={{ color: "text.primary" }}>
+            Cali bound
+          </Typography>
         </Grid>
         <Grid item xs={12}>
           <PlayerControlls sliderStyle={sliderStyle} spotifyApi={spotifyApi} />
