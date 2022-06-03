@@ -35,7 +35,10 @@ const Playlist = ({ spotifyApi, loading }) => {
   };
 
   return (
-    <Box sx={{ bgcolor: "background.paper", flex: 1, overflowY: "auto" }}>
+    <Box
+      id="Playlist__page"
+      sx={{ bgcolor: "background.paper", flex: 1, overflowY: "auto" }}
+    >
       <Box
         p={{ xs: 3, md: 4 }}
         sx={{

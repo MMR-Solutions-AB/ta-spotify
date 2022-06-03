@@ -30,6 +30,7 @@ const Search = ({ spotifyApi }) => {
 
     try {
       const result = await spotifyApi.searchTracks(value);
+      console.log(result);
       const { items } = result.body.tracks;
       const formattedSongs = formatSongData(items);
       setSongs(formattedSongs);
@@ -43,10 +44,10 @@ const Search = ({ spotifyApi }) => {
     <Box
       id="Search__page"
       sx={{
-        minHeight: "calc(100vh - 90px)",
-        bgcolor: "background.paper",
         padding: "30px",
-        width: "100%",
+        bgcolor: "background.paper",
+        flex: 1,
+        overflowY: "auto",
       }}
     >
       <form
@@ -72,7 +73,7 @@ const Search = ({ spotifyApi }) => {
       </form>
 
       <Grid container spacing={2}>
-        <Grid xs={12}>
+        <Grid item xs={12}>
           {songs.length > 0 && (
             <SongTable
               songs={songs}
